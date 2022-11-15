@@ -1,0 +1,19 @@
+extends ../layouts/main-layout.pug
+
+block content   
+
+    .row
+        .col-md-3
+            img(src=`/img/${content.imageUrl}` alt=`${content.description}`).img-fluid
+
+        .col-md-9.pl-3
+            h2.mb-3 #{content.name}
+            
+    .row
+        .col-md-12
+            hr
+            p.p-3 #{content.description}
+            
+           
+            
+                    

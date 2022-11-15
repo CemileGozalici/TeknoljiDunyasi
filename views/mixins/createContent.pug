@@ -1,0 +1,13 @@
+mixin createContent(content)
+    .col-md-4
+        .card
+            img(src=`/img/${content.imageUrl}` alt=`${content.description}`).card-img-top
+            .card-body
+                h5.card-title
+                    a(href=`/contents/${content.id}`) #{content.name}
+                                     
+            .card-footer.text-center                
+
+                a(href=`/contents/${content.id}`).btn.btn-outline-dark.btn-sm Detay 
+
+                     

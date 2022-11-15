@@ -1,0 +1,23 @@
+nav.navbar.navbar-expand-lg.navbar-dark.bg-dark.fixed-top
+    .container
+        a(href="/").navbar-brand Teknoloji Dünyası
+        ul.navbar-nav.mr-auto
+
+            li.nav-item
+                a(href="/", class=(path === '/'?'nav-link active':'nav-link')) Ana Sayfa
+
+            li.nav-item
+                a(href="/contents", class=(path === '/contents'?'nav-link active':'nav-link')) İçerikler 
+ 
+            li.nav-item
+                a(href="/admin/add-content", class=(path==='/admin/add-content'?'nav-link active':'nav-link')) İçerik Ekle
+
+            li.nav-item
+                a(href="/admin/contents", class=(path==='/admin/contents'?'nav-link active':'nav-link')) İçerik Düzenle
+
+        ul.navbar-nav.ml-auto
+            li.nav-item
+                a.nav-link(href="") Giriş Yap
+                    
+            li.nav-item
+                a.nav-link(href="") Kayıt Ol    

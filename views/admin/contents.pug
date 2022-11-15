@@ -1,0 +1,29 @@
+extends ../layouts/main-layout.pug
+
+block content 
+    if (action !== 'undefined' && action === 'delete')
+        div.alert.alert-danger İçerik silindi.
+
+    if (action !== 'undefined' && action === 'edit')
+        div.alert.alert-success İçerik güncellendi.
+    
+    if contents.length > 0
+        table.table.table-bordered
+            thead
+                tr
+                    th(style="width:100px;") Resim
+                    th İçerik Başlığı
+            tbody
+                each content in contents
+                    tr
+                        td
+                            img(src=`/img/${content.imageUrl}` width='80')
+                        td #{content.name}
+                        td 
+                            a.btn.btn-primary.btn-sm.mr-2(href=`/admin/contents/${content.id}`) Düzenle
+
+                            form(action='/admin/delete-content' method='POST')
+                                input(type='hidden' name='contentid' value=`${content.id}`)
+                                button(type='submit').btn.btn-danger.btn-sm Sil
+    else
+        h1 İçerik Bulunamadı                       
