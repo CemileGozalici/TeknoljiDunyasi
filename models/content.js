@@ -1,4 +1,4 @@
-const contents = [
+/*const contents = [
     { id: "13213", name: 'ABDden çiple teknoloji seddi: Çini yerinde tutmak istiyor',  imageUrl: '1.jpg', description: 'ABD yönetimi, ağustosta onaylanarak yürürlüğe giren Çip ve Bilim Yasası’nın ardından, Çinli üreticilerin ileri çip teknolojilerine erişimine yönelik kısıtlamalarla Pekin’in bu sektördeki teknolojik kabiliyetine set çekme niyetini açıkça ortaya koydu.ABD Ticaret Bakanlığına bağlı Sanayi ve Güvenlik Bürosu (BIS), 7 Ekim’de yayımladığı duyuruda, aralarında Çin’in en büyük hafıza çipi üreticisi Yangzte Memory Technologies, en büyük yarı iletken donanım üreticisi Naura Technology Group’un bulunduğu 31 şirket ve kurumun İhracat Kontrol Listesi’ne alındığını bildirdi.', categoryid: "3" },
     { id: "13214", name: 'Sağlık, sektöründe yapay zeka dönemi başaladı',  imageUrl: '2.jpg', description: 'Pandemiyle hız kazanan dijitalleşme, sağlık sektöründe de daha fazla hissedilmeye başlandı. HIMSS’in (Sağlık Bilgi ve Yönetim Sistemleri Topluluğu) sağlık hizmetlerinin geleceğine ışık tutan raporuna göre, klinikler ve özel hastaneler gibi sağlık kuruluşlarının %80’i önümüzdeki 5 yıl içinde dijital sağlık hizmetlerine yatırımlarını artırmayı planlıyor.Katılımcıların %47’si dijitalleşmenin kurum yapılanmasında ilk sırada yer aldığını aktarırken, hastalar da yalnız sağlık değil, sigorta alanında da kullanıcı dostu teknolojiler talep ediyor.', categoryid: "2" },
     { id: "13215", name: 'Tesla, daha ucuz bir model için çalışmalar başladı',  imageUrl: '3.jpg', description: 'Elon Musk yıllardır daha ucuz bir Tesla modeli üretmekten bahsediyor, ancak enflasyon, elektrikli arabalara olan yüksek talep ve tedarik sorunları, bunun yerine fiyatların yükselmesine neden oluyor. Tesla mühendislerinin daha önce 25 bin dolarlık bir araç üzerinde çalışacağı duyurulsa da odak noktasının Optimus adı verilen robota ve Model Y nin üretiminin artırılmasına kaydırılması bu sürecin önüne geçti. ', categoryid: "5" },
@@ -50,3 +50,31 @@ module.exports = class Content {
 
 }
 
+*/
+
+const Db = require('mongodb/lib/db');
+
+
+const getDb = require('../utility/database').getdb;
+
+class Content{
+    constructor(name, imageUrl, description) {
+        this.name = name;
+        this.imageUrl = imageUrl;
+        this.description = description;
+    }
+
+    save(){
+        const db = getDb();
+
+        db.collection('contents')
+          .insertOne(this)
+          .then(result => {
+               console.log(result);
+          })
+          .catch(err => {console.log(err)});
+    }
+
+}
+
+module.exports = Content;

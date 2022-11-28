@@ -15,14 +15,16 @@ block content
             .col-sm-10
                 input.form-control#image(type="text" name="imageUrl") 
 
-        .form-group.row
-            label(for="categoryid").col-sm-2.col-form-label Kategori
-            .col-sm-10
-                select.form-control#categoryid(name="categoryid")
-                    option(value="-1") Kategori Seçin
-                    each category in categories
-                        option(value=`${category.id}`) #{category.name}
-
+       
+        //- .form-group.row
+        //-     label(for="categoryid").col-sm-2.col-form-label Kategori
+        //-     .col-sm-10
+        //-         select.form-control#categoryid(name="categoryid")
+        //-             option(value="-1") Kategori Seçin
+        //-             each category in categories
+        //-                 option(value=`${category.id}`) #{category.name}
+           
+           
         .form-group.row
             label(for="description").col-sm-2.col-form-label Haber içeriği
             .col-sm-10

@@ -1,5 +1,5 @@
 const Content = require('../models/content');
-const Category = require('../models/category');
+//const Category = require('../models/category');
 
 exports.getContents = (req, res, next) => {
     const contents = Content.getAll();
@@ -12,24 +12,30 @@ exports.getContents = (req, res, next) => {
 }
 
 exports.getAddContent = (req, res, next) => {
-    const categories = Category.getAll();
     res.render('admin/add-content', {
         title: 'New Content',
         path: '/admin/add-content',
-        categories: categories
     });
 }
 
 exports.postAddContent = (req, res, next) => {
-    const content = new Content();
+   
 
-    content.name = req.body.name;
-    content.imageUrl = req.body.imageUrl;
-    content.categoryid = req.body.categoryid;
-    content.description = req.body.description;
+    const name = req.body.name;
+    const imageUrl = req.body.imageUrl;
+    const description = req.body.description;
 
-    content.saveContent();
-    res.redirect('/');
+    const content = new Content(name,imageUrl,description);
+    
+
+    content.save()
+        .then(result =>{
+            res.redirect('/admin/contents');
+        })
+        .catch(err =>{
+            console.log(err);
+        });
+    
 }
 
 exports.getEditContent = (req, res, next) => {
