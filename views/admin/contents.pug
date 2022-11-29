@@ -20,10 +20,10 @@ block content
                             img(src=`/img/${content.imageUrl}` width='80')
                         td #{content.name}
                         td 
-                            a.btn.btn-primary.btn-sm.mr-2(href=`/admin/contents/${content.id}`) Düzenle
+                            a.btn.btn-primary.btn-sm.mr-2(href=`/admin/contents/${content._id}`) Düzenle
 
                             form(action='/admin/delete-content' method='POST')
-                                input(type='hidden' name='contentid' value=`${content.id}`)
+                                input(type='hidden' name='contentid' value=`${content._id}`)
                                 button(type='submit').btn.btn-danger.btn-sm Sil
     else
         h1 İçerik Bulunamadı                       

@@ -4,10 +4,10 @@ mixin createContent(content)
             img(src=`/img/${content.imageUrl}` alt=`${content.description}`).card-img-top
             .card-body
                 h5.card-title
-                    a(href=`/contents/${content.id}`) #{content.name}
+                    a(href=`/contents/${content._id}`) #{content.name}
                                      
             .card-footer.text-center                
 
-                a(href=`/contents/${content.id}`).btn.btn-outline-dark.btn-sm Detay 
+                a(href=`/contents/${content._id}`).btn.btn-outline-dark.btn-sm Detay 
 
                      

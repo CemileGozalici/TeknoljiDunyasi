@@ -1,14 +1,22 @@
 const Content = require('../models/content');
 //const Category = require('../models/category');
 
+
 exports.getContents = (req, res, next) => {
-    const contents = Content.getAll();
-    res.render('admin/contents', {
-        title: 'Admin Contents',
-        contents: contents,
-        path: '/admin/contents',
-        action: req.query.action
-    });
+    Content.findAll()
+        .then(contents =>{
+            res.render('admin/contents', {
+                title: 'Admin Contents',
+                contents: contents,
+                path: '/admin/contents',
+                action: req.query.action
+            });
+        })
+        .catch((err) => {
+            console.log(err)
+        });
+   
+    
 }
 
 exports.getAddContent = (req, res, next) => {
@@ -38,33 +46,54 @@ exports.postAddContent = (req, res, next) => {
     
 }
 
+
 exports.getEditContent = (req, res, next) => {
 
-    const content = Content.getById(req.params.contentid);
-    const categories = Category.getAll();
-
-    res.render('admin/edit-content', {
-        title: 'Edit Content',
-        path: '/admin/contents',
-        content: content,
-        categories: categories
-    });
+    Content.findById(req.params.contentid)
+        .then(content => {
+            console.log(content);
+            res.render('admin/edit-content', {
+                title: 'Edit Content',
+                path: '/admin/contents',
+                content: content
+            });
+        })
+        .catch((err) => {
+            console.log(err)
+        });
 }
 
 exports.postEditContent = (req, res, next) => {
 
-    const content = Content.getById(req.body.id);
+    const id = req.body.id;
+    const name = req.body.name;
+    const imageUrl = req.body.imageUrl;
+    const description = req.body.description;
+    //content.categoryid = req.body.categoryid;
 
-    content.name = req.body.name;
-    content.imageUrl = req.body.imageUrl;
-    content.description = req.body.description;
-    content.categoryid = req.body.categoryid;
 
-    Content.Update(content);
-    res.redirect('/admin/contents?action=edit');
+    const content = new Content(name,imageUrl,description,id)
+
+    content.save()
+        .then(content => {
+            res.redirect('/admin/contents?action=edit'); 
+        }).catch((err) => {
+            console.log(err)
+        });
+
 }
+
 
 exports.postDeleteContent = (req, res, next) => {
-    Content.DeleteById(req.body.contentsid);
-    res.redirect('/admin/contents?action=delete');
-}
+    const id = req.body.contentid;
+
+    Content.deleteById(id)
+        .then(() => {
+            console.log('İçerik silindi')
+            res.redirect('/admin/contents?action=delete');
+
+        })
+        .catch((err) => {
+            console.log(err)
+        });
+    }
