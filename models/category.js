@@ -1,38 +1,46 @@
-const categories = [
-    { id: "1", name: "Yapay Zeka", description: "Yapay Zeka kategori ürünleri" },
-    { id: "2", name: "Sağlık Teknolojileri", description: "Sağlık Teknolojileri kategori ürünleri" },
-    { id: "3", name: "Siber Güvenlik", description: "Siber Güvenlik kategori ürünleri" },
-    { id: "4", name: "Savunma Sanayi", description: "Savunma Sanayi kategori ürünleri" },
-    { id: "5", name: "Yenilenebilir Enerji", description: "Yenilenebilir Enerji kategori ürünleri" },
-];
+const getDb = require('../utility/database').getdb;
+const mongodb = require('mongodb');
 
-module.exports = class Category {
-    constructor(name, description) {
-        this.id = (categories.length + 1).toString();
+class Category {
+    constructor(name,description,id) {
         this.name = name;
         this.description = description;
+        this._id = id ? new mongodb.ObjectID(id): null;
     }
 
-    saveCategory() {
-        categories.push(this);
+    save() {
+        let db = getDb();
+
+        if(this._id){
+            db = db.collection('categories').updateOne({ _id: this._id },{ $set: this});
+        }else {
+            db = db.collection('categories').insertOne(this);
+        }
+
+        return db
+            .then(result => console.log(result))
+            .catch(err => console.log(err));
+
+    }
+    static findAll(){
+        const db = getDb();
+        return db.collection('categories')
+                    .find()
+                    .toArray()
+                    .then(Category=> {
+                        return Category;
+                        
+                    }).catch(err => console.log(err));
     }
 
-    static getAll() {
-        return categories;
-    }
+    static findById(categoryid){
+        const db = getDb();
 
-    static getById(id) {
-        return categories.find(i => i.id === id);
-    }
-
-    static update(category) {
-        const index = categories.findIndex(i => i.id === category.id);
-        categories[index].name = category.name;
-        categories[index].description = category.description;
-    }
-
-    static deleteById(id) {
-        const index = categories.findIndex(i => i.id === id);
-        categories.splice(index, 1);
+        return db.collection('categories')
+                    .findOne({_id: new mongodb.ObjectID(categoryid)})
+                    .then(category => {
+                        return category;
+                    }).catch(err => console.log(err));
     }
 }
+module.exports = Category;

@@ -1,15 +1,15 @@
-const Db = require('mongodb/lib/db');
 const getDb = require('../utility/database').getdb;
-
-
 const mongodb = require('mongodb');
 
 class Content{
-    constructor(name, imageUrl, description,id) {
+    constructor(name, imageUrl, description,categories,id,userId) {
         this.name = name;
         this.imageUrl = imageUrl;
         this.description = description;
+        this.categories = (categories && !Array.isArray(categories)) ? Array.of(categories):
+        categories;
         this._id= id ? new mongodb.ObjectID(id) : null;
+        this.userId=userId;
     }
 
     save(){
@@ -36,8 +36,9 @@ class Content{
             .toArray()
             .then(contents => {
                 return contents;
-            })
-            .catch(err => console.log(err));
+            }).catch(err => {
+                console.log(err);
+            });
     }
 
     static findById(contentid){
@@ -62,9 +63,21 @@ class Content{
                       console.log(err);
                 });
     }
+    static findByCategoryId(categoryid){
+        const db = getDb();
+        return db.collection('contents')
+            .find({categories: categoryid})
+            .toArray()
+            .then(contents=> {
+                return contents;
+            }).catch(err => {
+                console.log(err);
+          });
 
+    }
 
 
 }
+
 
 module.exports = Content;
