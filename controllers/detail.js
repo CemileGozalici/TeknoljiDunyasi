@@ -2,52 +2,57 @@ const Content = require('../models/content');
 const Category = require('../models/category');
 
 exports.getIndex = (req, res, next) => {
-   Content.findAll()
+    //console.log(req.cookies.isAuthenticated);
+    Content.find()
         .then(contents => {
-            Category.findAll()
+            return contents;
+        }).then(contents => {
+            Category.find()
                 .then(categories => {
                     res.render('detail/index', {
-                        title: 'Teknoloji Dünyası',
+                        title: 'News',
                         contents: contents,
                         path: '/',
-                        categories:categories
+                        categories: categories
                     });
                 })
-            
-        }).catch((err) => {
-            console.log(err)
+        })
+        .catch((err) => {
+            console.log(err);
         });
-    
 }
 
 exports.getContents = (req, res, next) => {
-    
-    Content.findAll()
+    Content
+        .find()
         .then(contents => {
-            Category.findAll()
+            return contents;
+        }).then(contents => {
+            Category.find()
                 .then(categories => {
                     res.render('detail/contents', {
-                        title: 'contents',
+                        title: 'Contents',
                         contents: contents,
-                        path: '/contents',
-                        categories:categories
+                        path: '/',
+                        categories: categories
                     });
                 })
-           
-        }).catch((err) => {
-            console.log(err)
+        })
+        .catch((err) => {
+            console.log(err);
         });
-    
 }
 
 exports.getContentsByCategoryId = (req, res, next) => {
     const categoryid = req.params.categoryid;
     const model = [];
 
-    Category.findAll()
+    Category.find()
         .then(categories => {
             model.categories = categories;
-            return Content.findByCategoryId(categoryid);
+            return Content.find({
+                categories: categoryid
+            });
         })
         .then(contents => {
             res.render('detail/contents', {
@@ -57,37 +62,28 @@ exports.getContentsByCategoryId = (req, res, next) => {
                 selectedCategory: categoryid,
                 path: '/contents'
             });
-        }).catch((err) => {
-            console.log(err)
-        });
-   
+        })
+        .catch((err) => {
+            console.log(err);
+        })
 }
 
-
-
-
 exports.getContent = (req, res, next) => {
-   
-    Content.findById(req.params.contentid)
+
+    Content
+        .findById(req.params.contentid)
         .then(content => {
             res.render('detail/content-detail', {
                 title: content.name,
                 content: content,
                 path: '/contents'
             });
-        }).catch((err) => {
-            console.log(err)
+        })
+        .catch((err) => {
+            console.log(err);
         });
-    
-    
 }
 
 
-exports.getContentDetails = (req, res, next) => {
-    res.render('detail/details', {
-        title: 'Details',
-        path: '/details'
-    });
-}
 
 

@@ -1,10 +1,13 @@
 const Content = require('../models/content');
 const Category = require('../models/category');
 
-
 exports.getContents = (req, res, next) => {
-    Content.findAll()
-        .then(contents =>{
+    Content
+        .find()
+        .populate('userId', 'name -_id')
+        .select('name imageUrl userId')
+        .then(contents => {
+            console.log(contents);
             res.render('admin/contents', {
                 title: 'Admin Contents',
                 contents: contents,
@@ -13,58 +16,68 @@ exports.getContents = (req, res, next) => {
             });
         })
         .catch((err) => {
-            console.log(err)
+            console.log(err);
         });
-   
-    
 }
 
 exports.getAddContent = (req, res, next) => {
     res.render('admin/add-content', {
         title: 'New Content',
-        path: '/admin/add-content',
+        path: '/admin/add-content'
     });
 }
 
 exports.postAddContent = (req, res, next) => {
-   
 
     const name = req.body.name;
     const imageUrl = req.body.imageUrl;
     const description = req.body.description;
 
-    const content = new Content(name,imageUrl,description,null,req.user_id);
-    
+    const content = new Content(
+        {
+            name: name,
+            imageUrl: imageUrl,
+            description: description,
+            userId: req.user
+        }
+    );
 
     content.save()
-        .then(result =>{
+        .then(() => {
             res.redirect('/admin/contents');
         })
-        .catch(err =>{
+        .catch(err => {
             console.log(err);
         });
-    
-}
 
+
+}
 
 exports.getEditContent = (req, res, next) => {
 
     Content.findById(req.params.contentid)
+        //.populate('categories', 'name -_id')
         .then(content => {
-            Category.findAll()
+            console.log(content);
+            return content;
+        })
+        .then(content => {
+
+            Category.find()
                 .then(categories => {
 
                     categories = categories.map(category => {
-                        if(content.categories){
+
+                        if (content.categories) {
                             content.categories.find(item => {
-                                if(item == category._id) {
+                                if (item.toString() === category._id.toString()) {
                                     category.selected = true;
                                 }
                             })
                         }
-                        
+
                         return category;
-                    });
+                    })
 
                     res.render('admin/edit-content', {
                         title: 'Edit Content',
@@ -72,11 +85,12 @@ exports.getEditContent = (req, res, next) => {
                         content: content,
                         categories: categories
                     });
-                });
+
+
+                })
+
         })
-        .catch((err) => {
-            console.log(err)
-        });
+        .catch(err => { console.log(err) });
 }
 
 exports.postEditContent = (req, res, next) => {
@@ -85,32 +99,33 @@ exports.postEditContent = (req, res, next) => {
     const name = req.body.name;
     const imageUrl = req.body.imageUrl;
     const description = req.body.description;
-    const categories = req.body.categoryids;
+    const ids = req.body.categoryids;
 
+    Content.update({ _id: id }, {
+        $set: {
+            name: name,
+            imageUrl: imageUrl,
+            description: description,
+            categories: ids
+        }
+    }).then(() => {
+        res.redirect('/admin/contents?action=edit');
+    }).catch(err => console.log(err));
 
-    const content = new Content(name,imageUrl,description,categories,id,req.user._id)
-
-    content.save()
-        .then(content => {
-            res.redirect('/admin/contents?action=edit'); 
-        }).catch((err) => {
-            console.log(err)
-        });
 
 }
 
-
 exports.postDeleteContent = (req, res, next) => {
+
     const id = req.body.contentid;
 
-    Content.deleteById(id)
+    Content.findByIdAndRemove(id)
         .then(() => {
-            console.log('İçerik silindi')
+            console.log('content has been deleted.');
             res.redirect('/admin/contents?action=delete');
-
         })
-        .catch((err) => {
-            console.log(err)
+        .catch(err => {
+            console.log(err);
         });
 }
 
@@ -118,71 +133,80 @@ exports.postDeleteContent = (req, res, next) => {
 exports.getAddCategory = (req, res, next) => {
     res.render('admin/add-category', {
         title: 'New Category',
-        path: '/admin/add-category',
+        path: '/admin/add-category'
     });
 }
 
+
 exports.postAddCategory = (req, res, next) => {
-   
+
     const name = req.body.name;
     const description = req.body.description;
-    const category = new Category(name,description);
+
+    const category = new Category({
+        name: name,
+        description: description
+    });
 
     category.save()
         .then(result => {
-            console.log(result);
             res.redirect('/admin/categories?action=create');
         })
-        .catch((err) => {
-            console.log(err)
-        });
+        .catch(err => console.log(err));
 }
 
 exports.getCategories = (req, res, next) => {
-   
-    Category.findAll()
-        .then(categories=> {
-            res.render('admin/categories',{
+
+    Category.find()
+        .then(categories => {
+            res.render('admin/categories', {
                 title: 'Categories',
                 path: '/admin/categories',
                 categories: categories,
                 action: req.query.action
             });
-        }).catch((err) => {
-            console.log(err)
-        });
-   
+        }).catch(err => console.log(err));
 }
+
+
 exports.getEditCategory = (req, res, next) => {
-   
     Category.findById(req.params.categoryid)
-        .then(category=> {
+        .then(category => {
             res.render('admin/edit-category', {
                 title: 'Edit Category',
                 path: '/admin/categories',
                 category: category
-               
-            });
-        }).catch((err) => {
-            console.log(err)
-        });
-   
+            })
+        })
+        .catch(err => console.log(err));
 }
 
 exports.postEditCategory = (req, res, next) => {
-   
-    const id= req.body.id;
+
+    const id = req.body.id;
     const name = req.body.name;
     const description = req.body.description;
 
-    const category = new Category(name,description,id);
-
-    category.save()
-        .then(result => {
-            console.log(result);
+    Category.findById(id)
+        .then(category => {
+            category.name = name;
+            category.description = description;
+            return category.save();
+        }).then(() => {
             res.redirect('/admin/categories?action=edit');
         })
-        .catch((err) => {
-            console.log(err)
-        });
+        .catch(err => console.log(err));
+
+}
+
+exports.postDeleteCategory = (req, res, next) => {
+    const id = req.body.categoryid;
+
+    Category.findByIdAndRemove(id)
+        .then(() => {
+            res.redirect('/admin/categories?action=delete');
+        })
+        .catch(err => {
+            console.log(err);
+        })
 }

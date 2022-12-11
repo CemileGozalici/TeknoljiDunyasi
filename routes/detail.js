@@ -1,17 +1,17 @@
 const express = require('express');
 const router = express.Router();
 
+const csrf=require('../middleware/csrf');
 const detailController = require('../controllers/detail');
 
-router.get('/', detailController.getIndex);
 
-router.get('/contents', detailController.getContents);
+router.get('/', csrf, detailController.getIndex);
 
-router.get('/contents/:contentid', detailController.getContent);
+router.get('/contents', csrf,detailController.getContents);
 
-router.get('/categories/:categoryid', detailController.getContentsByCategoryId);
+router.get('/contents/:contentid', csrf, detailController.getContent);
 
-router.get('/details', detailController.getContentDetails);
+router.get('/categories/:categoryid', csrf,detailController.getContentsByCategoryId);
 
 
 module.exports = router;

@@ -1,29 +1,34 @@
 const express = require('express');
 const router = express.Router();
 
+const isAuthenticated = require('../middleware/authentication');
+
 const adminController = require('../controllers/admin');
 
-router.get('/contents', adminController.getContents);
+const csrf=require('../middleware/csrf');
 
-router.get('/add-content', adminController.getAddContent);
+router.get('/contents',csrf,isAuthenticated, adminController.getContents);
 
-router.post('/add-content', adminController.postAddContent);
+router.get('/add-content',csrf,isAuthenticated, adminController.getAddContent);
 
-router.get('/contents/:contentid', adminController.getEditContent);
+router.post('/add-content',csrf,isAuthenticated, adminController.postAddContent);
 
-router.post('/contents', adminController.postEditContent);
+router.get('/contents/:contentid',csrf,isAuthenticated, adminController.getEditContent);
 
-router.post('/delete-content', adminController.postDeleteContent);
+router.post('/contents',csrf,isAuthenticated, adminController.postEditContent);
 
-router.get('/add-category', adminController.getAddCategory);
+router.post('/delete-content',csrf,isAuthenticated, adminController.postDeleteContent);
 
-router.post('/add-category', adminController.postAddCategory);
+router.get('/add-category',csrf,isAuthenticated, adminController.getAddCategory);
 
-router.get('/categories', adminController.getCategories);
+router.post('/add-category',csrf,isAuthenticated, adminController.postAddCategory);
 
-router.get('/categories/:categoryid', adminController.getEditCategory);
+router.get('/categories',csrf,isAuthenticated, adminController.getCategories);
 
-router.post('/categories', adminController.postEditCategory);
+router.get('/categories/:categoryid',csrf,isAuthenticated, adminController.getEditCategory);
 
+router.post('/categories',csrf,isAuthenticated, adminController.postEditCategory);
 
-module.exports = router;
+router.post('/delete-category',csrf,isAuthenticated, adminController.postDeleteCategory);
+
+module.exports = router;   

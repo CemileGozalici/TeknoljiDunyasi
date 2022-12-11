@@ -8,23 +8,29 @@ nav.navbar.navbar-expand-lg.navbar-dark.bg-dark.fixed-top
 
             li.nav-item
                 a(href="/contents", class=(path === '/contents'?'nav-link active':'nav-link')) İçerikler 
- 
-            li.nav-item
-                a(href="/admin/add-content", class=(path==='/admin/add-content'?'nav-link active':'nav-link')) İçerik Ekle
 
-            li.nav-item
-                a(href="/admin/contents", class=(path==='/admin/contents'?'nav-link active':'nav-link')) İçerik Düzenle
+            if isAuthenticated
+            
+                li.nav-item
+                    a(href="/admin/add-content", class=(path==='/admin/add-content'?'nav-link active':'nav-link')) İçerik Ekle
 
-            li.nav-item
-                a(href="/admin/add-category", class=(path==='/admin/add-category'?'nav-link active':'nav-link')) Kategori Ekle
+                li.nav-item
+                    a(href="/admin/contents", class=(path==='/admin/contents'?'nav-link active':'nav-link')) İçerik Düzenle
 
-            li.nav-item
-                a(href="/admin/categories", class=(path==='/admin/categories'?'nav-link active':'nav-link')) Kategoriler
+                li.nav-item
+                    a(href="/admin/add-category", class=(path==='/admin/add-category'?'nav-link active':'nav-link')) Kategori Ekle
+
+                li.nav-item
+                    a(href="/admin/categories", class=(path==='/admin/categories'?'nav-link active':'nav-link')) Kategoriler
 
 
         ul.navbar-nav.ml-auto
-            li.nav-item
-                a.nav-link(href="") Giriş Yap
+            if isAuthenticated
+                li.nav-item
+                    a.nav-link(href="/logout") Çıkış Yap
+            else
+                li.nav-item
+                    a.nav-link(href="/login") Giriş Yap
                     
-            li.nav-item
-                a.nav-link(href="") Kayıt Ol    
+                li.nav-item
+                    a.nav-link(href="/register") Üye Ol    
