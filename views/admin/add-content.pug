@@ -4,32 +4,26 @@ block styles
     link(rel="stylesheet" href="/css/forms.css")
 
 block content
+
+    if errorMessage
+        div.alert.alert-danger.col-sm-7 !{errorMessage}
+
     form(action="/admin/add-content" method="POST")
         input(type="hidden" name="_csrf" value=`${csrfToken}`)
         .form-group.row
             label(for="name").col-sm-2.col-form-label İçerik Başlığı
             .col-sm-10
-                input.form-control#name(type="text" name="name")  
+                input.form-control#name(type="text" name="name" )  
 
         .form-group.row
             label(for="imageUrl").col-sm-2.col-form-label Resim
             .col-sm-10
                 input.form-control#image(type="text" name="imageUrl") 
 
-       
-        //- .form-group.row
-        //-     label(for="categoryid").col-sm-2.col-form-label Kategori
-        //-     .col-sm-10
-        //-         select.form-control#categoryid(name="categoryid")
-        //-             option(value="-1") Kategori Seçin
-        //-             each category in categories
-        //-                 option(value=`${category.id}`) #{category.name}
-           
-           
         .form-group.row
             label(for="description").col-sm-2.col-form-label Haber içeriği
             .col-sm-10
-                textarea.form-control(name="description" cols="30" rows="10") 
+                textarea.form-control(name="description" cols="30" rows="10" ) 
                 
         .form-group.row
             .col-sm-10.offset-sm-2

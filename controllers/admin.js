@@ -47,10 +47,27 @@ exports.postAddContent = (req, res, next) => {
             res.redirect('/admin/contents');
         })
         .catch(err => {
-            console.log(err);
+            if (err.name == 'ValidationError') {
+                let message = '';
+                for (field in err.errors) {
+                    message += err.errors[field].message + '<br>';
+                }
+
+                res.render('admin/add-content', {
+                    title: 'New Content',
+                    path: '/admin/add-content',
+                    errorMessage: message,
+                    inputs: {
+                        name: name,
+                        description: description
+                    }
+                });
+            } else {
+                next(err);
+            }
+
+
         });
-
-
 }
 
 exports.getEditContent = (req, res, next) => {
@@ -152,7 +169,28 @@ exports.postAddCategory = (req, res, next) => {
         .then(result => {
             res.redirect('/admin/categories?action=create');
         })
-        .catch(err => console.log(err));
+        .catch(err => {
+            if (err.name == 'ValidationError') {
+                let message = '';
+                for (field in err.errors) {
+                    message += err.errors[field].message + '<br>';
+                }
+
+                res.render('admin/add-category', {
+                    title: 'New Category',
+                    path: '/admin/add-category',
+                    errorMessage: message,
+                    inputs: {
+                        name: name,
+                        description: description
+                    }
+                });
+            } else {
+                next(err);
+            }
+
+
+        });
 }
 
 exports.getCategories = (req, res, next) => {
